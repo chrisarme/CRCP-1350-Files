@@ -1,10 +1,10 @@
 //Maya ASCII 2018 scene
 //Name: Sound and animation  - Project 4.ma
-//Last modified: Wed, Mar 07, 2018 04:52:55 PM
+//Last modified: Mon, Mar 19, 2018 04:50:13 PM
 //Codeset: 1252
 requires maya "2018";
-requires -nodeType "MASH_BulletSolver" -nodeType "MASH_Waiter" -nodeType "MASH_Transform"
-		 -nodeType "MASH_Replicator" -nodeType "MASH_Random" -nodeType "MASH_Distribute" -nodeType "MASH_Dynamics"
+requires -nodeType "MASH_Waiter" -nodeType "MASH_Transform" -nodeType "MASH_Replicator"
+		 -nodeType "MASH_Offset" -nodeType "MASH_Random" -nodeType "MASH_Distribute" -nodeType "MASH_Python"
 		 -nodeType "MASH_ChannelRandom" -nodeType "MASH_Repro" "MASH" "450";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -16,13 +16,13 @@ fileInfo "license" "student";
 createNode transform -s -n "persp";
 	rename -uid "62016F89-4F6C-7417-16B4-36B881B416D1";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -18.677965235848458 14.698107270912658 42.15364213002286 ;
-	setAttr ".r" -type "double3" -14.138352729680708 -15.399999999997407 0 ;
+	setAttr ".t" -type "double3" -5.717234471546182 14.691257331172405 53.041924492065085 ;
+	setAttr ".r" -type "double3" -13.538352729681728 -1.7999999999973841 7.4581051593622773e-17 ;
 createNode camera -s -n "perspShape" -p "persp";
 	rename -uid "6AB1561D-4166-40AF-CEAF-A49B1E51C91B";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
-	setAttr ".coi" 44.82186966202994;
+	setAttr ".coi" 56.234996836229982;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
@@ -109,30 +109,20 @@ createNode mesh -n "MASH1_ReproMeshShape" -p "MASH1_ReproMesh";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
 	setAttr ".ai_translator" -type "string" "polymesh";
-createNode transform -n "MASH1_BulletSolver";
-	rename -uid "3C15A3FA-4459-4734-C163-E8BD4A32029A";
-createNode MASH_BulletSolver -n "MASH1_BulletSolverShape" -p "MASH1_BulletSolver";
-	rename -uid "E40E6438-41B4-7D78-ADF5-77A62F9A6B6E";
-	addAttr -s false -ci true -h true -sn "instancerMessage" -ln "instancerMessage" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".lastTime" 1;
-	setAttr ".groundPlane" no;
-	setAttr ".gravity" -type "float3" 0 0 0 ;
 createNode lightLinker -s -n "lightLinker1";
-	rename -uid "A384726B-4954-4F8F-E9FA-5CB566893DFA";
+	rename -uid "79D9DDC2-4727-2316-797E-3F894D81F6FB";
 	setAttr -s 2 ".lnk";
 	setAttr -s 2 ".slnk";
 createNode shapeEditorManager -n "shapeEditorManager";
-	rename -uid "1AA7B785-4AF1-112D-B283-5DBD18FFF044";
+	rename -uid "7C74E6EA-455C-D315-83D9-32859DA97FFF";
 createNode poseInterpolatorManager -n "poseInterpolatorManager";
-	rename -uid "9D104165-48B6-7045-8574-699236A23398";
+	rename -uid "4698B8ED-4884-7497-D875-A7B826AB8568";
 createNode displayLayerManager -n "layerManager";
-	rename -uid "8A870C09-45C1-A3CF-F41F-D0AB6B0EB04E";
+	rename -uid "4579A57A-4685-ADD1-CEAC-E9A48C70A984";
 createNode displayLayer -n "defaultLayer";
 	rename -uid "A020B37F-44F1-B1CB-A0B4-C5AB4A9EC50B";
 createNode renderLayerManager -n "renderLayerManager";
-	rename -uid "B3E0D754-4EA5-D886-7044-F3B0BDA4921E";
+	rename -uid "1889B43E-437F-108B-0D7C-79BFEC297A53";
 createNode renderLayer -n "defaultRenderLayer";
 	rename -uid "CBD6F7BA-496F-3F68-F526-74A7685D056E";
 	setAttr ".g" yes;
@@ -174,7 +164,7 @@ createNode script -n "uiConfigurationScriptNode";
 		+ "\t\tposePanel -edit -l (localizedPanelLabel(\"Pose Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"dynRelEdPanel\" (localizedPanelLabel(\"Dynamic Relationships\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Dynamic Relationships\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"relationshipPanel\" (localizedPanelLabel(\"Relationship Editor\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Relationship Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"referenceEditorPanel\" (localizedPanelLabel(\"Reference Editor\")) `;\n\tif (\"\" != $panelName) {\n"
 		+ "\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Reference Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"componentEditorPanel\" (localizedPanelLabel(\"Component Editor\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Component Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"dynPaintScriptedPanelType\" (localizedPanelLabel(\"Paint Effects\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Paint Effects\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"scriptEditorPanel\" (localizedPanelLabel(\"Script Editor\")) `;\n"
 		+ "\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Script Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"profilerPanel\" (localizedPanelLabel(\"Profiler Tool\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Profiler Tool\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"contentBrowserPanel\" (localizedPanelLabel(\"Content Browser\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Content Browser\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"nodeEditorPanel\" (localizedPanelLabel(\"Node Editor\")) `;\n"
-		+ "\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Node Editor\")) -mbv $menusOkayInPanels  $panelName;\n\n\t\t\t$editorName = ($panelName+\"NodeEditorEd\");\n            nodeEditor -e \n                -allAttributes 0\n                -allNodes 0\n                -autoSizeNodes 1\n                -consistentNameSize 1\n                -createNodeCommand \"nodeEdCreateNodeCommand\" \n                -connectNodeOnCreation 0\n                -connectOnDrop 0\n                -highlightConnections 0\n                -copyConnectionsOnPaste 0\n                -connectionStyle \"bezier\" \n                -defaultPinnedState 0\n                -additiveGraphingMode 0\n                -settingsChangedCallback \"nodeEdSyncControls\" \n                -traversalDepthLimit -1\n                -keyPressCommand \"nodeEdKeyPressCommand\" \n                -nodeTitleMode \"name\" \n                -gridSnap 0\n                -gridVisibility 1\n                -crosshairOnEdgeDragging 0\n                -popupMenuScript \"nodeEdBuildPanelMenus\" \n"
+		+ "\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Node Editor\")) -mbv $menusOkayInPanels  $panelName;\n\n\t\t\t$editorName = ($panelName+\"NodeEditorEd\");\n            nodeEditor -e \n                -allAttributes 0\n                -allNodes 0\n                -autoSizeNodes 1\n                -consistentNameSize 1\n                -createNodeCommand \"nodeEdCreateNodeCommand\" \n                -connectNodeOnCreation 0\n                -connectOnDrop 0\n                -highlightConnections 0\n                -copyConnectionsOnPaste 0\n                -connectionStyle \"straight\" \n                -defaultPinnedState 0\n                -additiveGraphingMode 0\n                -settingsChangedCallback \"nodeEdSyncControls\" \n                -traversalDepthLimit -1\n                -keyPressCommand \"nodeEdKeyPressCommand\" \n                -nodeTitleMode \"name\" \n                -gridSnap 0\n                -gridVisibility 1\n                -crosshairOnEdgeDragging 0\n                -popupMenuScript \"nodeEdBuildPanelMenus\" \n"
 		+ "                -showNamespace 1\n                -showShapes 1\n                -showSGShapes 0\n                -showTransforms 1\n                -useAssets 1\n                -syncedSelection 1\n                -extendToShapes 1\n                -activeTab -1\n                -editorMode \"default\" \n                $editorName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\tif ($useSceneConfig) {\n        string $configName = `getPanel -cwl (localizedPanelLabel(\"Current Layout\"))`;\n        if (\"\" != $configName) {\n\t\t\tpanelConfiguration -edit -label (localizedPanelLabel(\"Current Layout\")) \n\t\t\t\t-userCreated false\n\t\t\t\t-defaultImage \"\"\n\t\t\t\t-image \"\"\n\t\t\t\t-sc false\n\t\t\t\t-configString \"global string $gMainPane; paneLayout -e -cn \\\"single\\\" -ps 1 100 100 $gMainPane;\"\n\t\t\t\t-removeAllPanels\n\t\t\t\t-ap false\n\t\t\t\t\t(localizedPanelLabel(\"Persp View\")) \n\t\t\t\t\t\"modelPanel\"\n"
 		+ "\t\t\t\t\t\"$panelName = `modelPanel -unParent -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels `;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -greasePencils 1\\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 1058\\n    -height 700\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
 		+ "\t\t\t\t\t\"modelPanel -edit -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels  $panelName;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -greasePencils 1\\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 1058\\n    -height 700\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
@@ -189,70 +179,86 @@ createNode MASH_Waiter -n "MASH1";
 	addAttr -s false -ci true -h true -sn "instancerMessage" -ln "instancerMessage" 
 		-at "message";
 	addAttr -s false -ci true -h true -sn "dynamicsMessage" -ln "dynamicsMessage" -at "message";
-	setAttr ".inRotPP" -type "vectorArray" 156 -184.77395629882813 0 -15.100250244140625 -341.96343994140625
-		 0 221.2947998046875 -70.782806396484375 0 119.56649780273438 133.27005004882813 0
-		 206.68353271484375 10.35833740234375 0 30.242523193359375 250.1669921875 0 -329.1146240234375 -346.730712890625
-		 0 -149.66102600097656 182.0030517578125 0 275.98828125 343.17926025390625 0 -73.01495361328125 -118.10382080078125
-		 0 -304.77163696289063 -247.08786010742188 0 34.55535888671875 -129.19741821289063
-		 0 -279.462158203125 29.125152587890625 0 72.424957275390625 238.351806640625 0 59.019317626953125 -152.87625122070313
-		 0 359.75146484375 -263.9091796875 0 325.311767578125 -5.961273193359375 0 -284.745361328125 -57.891693115234375
-		 0 -288.54266357421875 -76.285980224609375 0 11.825225830078125 235.00323486328125
-		 0 -246.45527648925781 343.93756103515625 0 -350.666259765625 -170.16249084472656
-		 0 156.9755859375 -93.13726806640625 0 -344.95419311523438 -332.09390258789063 0 -265.77813720703125 214.85821533203125
-		 0 22.852935791015625 269.729736328125 0 -189.08505249023438 -158.55241394042969 0
-		 -319.09210205078125 313.70794677734375 0 -74.509735107421875 81.1080322265625 0 -114.2652587890625 -298.6033935546875
-		 0 162.4176025390625 238.53497314453125 0 344.871337890625 -279.37725830078125 0 116.22311401367188 -116.13967895507813
-		 0 150.78927612304688 91.17926025390625 0 269.20257568359375 -3.728118896484375 0
-		 302.4429931640625 235.98968505859375 0 -247.12332153320313 -254.8863525390625 0 -59.090362548828125 -245.31343078613281
-		 0 -127.674560546875 -192.13496398925781 0 -238.89669799804688 -9.4312744140625 0
-		 -336.994873046875 -178.16163635253906 0 35.254364013671875 140.138671875 0 169.83197021484375 -210.25166320800781
-		 0 -248.56759643554688 82.667755126953125 0 120.62521362304688 64.319793701171875
-		 0 20.8262939453125 -159.63902282714844 0 -322.135986328125 -241.9293212890625 0 -293.62750244140625 -50.5528564453125
-		 0 164.87066650390625 -228.23603820800781 0 288.44769287109375 157.7740478515625 0
-		 197.15863037109375 -282.61929321289063 0 -221.46652221679688 -95.396026611328125
-		 0 57.036285400390625 188.62884521484375 0 -307.429443359375 258.18682861328125 0
-		 48.4349365234375 346.17462158203125 0 331.3349609375 -206.93605041503906 0 109.32696533203125 142.81442260742188
-		 0 -63.725189208984375 126.19918823242188 0 331.4151611328125 77.728271484375 0 -187.61309814453125 -239.48980712890625
-		 0 5.5703125 -27.529754638671875 0 -4.509765625 -166.61050415039063 0 -232.48727416992188 -165.63252258300781
-		 0 -351.68826293945313 -352.45050048828125 0 -79.871337890625 -72.8560791015625 0
-		 300.26495361328125 -20.506103515625 0 -140.79486083984375 -341.2916259765625 0 -177.06733703613281 -9.49761962890625
-		 0 -10.871734619140625 314.93377685546875 0 -41.54852294921875 359.76318359375 0 332.4674072265625 207.51397705078125
-		 0 222.857177734375 182.91473388671875 0 7.562408447265625 37.4393310546875 0 139.1646728515625 246.0208740234375
-		 0 158.11053466796875 -188.79493713378906 0 71.538238525390625 -126.03741455078125
-		 0 -340.37979125976563 -22.3819580078125 0 -329.7801513671875 -17.307891845703125
-		 0 333.831298828125 -288.937744140625 0 -102.31683349609375 -85.38751220703125 0 -225.66316223144531 -249.34457397460938
-		 0 215.31134033203125 1.4375 0 300.53204345703125 -313.95452880859375 0 -164.88565063476563 346.46923828125
-		 0 -88.416412353515625 -174.92802429199219 0 -168.88542175292969 104.93600463867188
-		 0 299.09405517578125 202.4578857421875 0 263.1353759765625 -74.841766357421875 0
-		 -166.99827575683594 23.0423583984375 0 -55.646575927734375 14.5584716796875 0 102.72311401367188 -104.23284912109375
-		 0 -187.14094543457031 -20.40850830078125 0 -141.95915222167969 -346.66986083984375
-		 0 -306.93203735351563 -81.73388671875 0 125.47329711914063 316.13616943359375 0 53.191680908203125 217.96142578125
-		 0 -136.4923095703125 -342.76303100585938 0 231.08209228515625 213.6407470703125 0
-		 -0.417938232421875 -222.63893127441406 0 -227.60609436035156 -41.6572265625 0 -141.714111328125 311.5469970703125
-		 0 -40.4583740234375 350.5836181640625 0 -275.192138671875 -117.51487731933594 0 -137.89468383789063 -292.29348754882813
-		 0 -103.10311889648438 -296.73641967773438 0 85.736663818359375 -73.957611083984375
-		 0 -85.589630126953125 32.95416259765625 0 -5.542205810546875 -287.709228515625 0
-		 -150.541748046875 -184.82231140136719 0 -103.24246215820313 291.75384521484375 0
-		 -142.6097412109375 183.1268310546875 0 272.86346435546875 -172.77653503417969 0 99.6893310546875 340.070556640625
-		 0 -289.1614990234375 127.21600341796875 0 -60.254913330078125 -200.46104431152344
-		 0 195.39697265625 44.119720458984375 0 288.5350341796875 255.10504150390625 0 -60.276763916015625 180.177490234375
-		 0 193.5379638671875 -119.73640441894531 0 -192.83663940429688 -186.27827453613281
-		 0 145.64605712890625 339.84710693359375 0 307.755615234375 318.3116455078125 0 235.94171142578125 -47.038238525390625
-		 0 -294.54684448242188 172.02069091796875 0 323.83966064453125 6.103973388671875 0
-		 44.171295166015625 -313.954833984375 0 -342.38131713867188 83.309112548828125 0 -258.90875244140625 258.95111083984375
-		 0 260.1055908203125 -113.73611450195313 0 -347.07937622070313 -268.0093994140625
-		 0 -73.330535888671875 -39.53326416015625 0 142.13656616210938 -93.66497802734375
-		 0 -252.57241821289063 50.38690185546875 0 -129.80049133300781 -348.03363037109375
-		 0 268.00531005859375 -356.41427612304688 0 -358.28875732421875 144.11767578125 0
-		 -24.68310546875 -217.356201171875 0 -8.290374755859375 -174.00108337402344 0 30.595977783203125 -131.42024230957031
-		 0 174.29425048828125 -298.61532592773438 0 -141.52006530761719 -135.00453186035156
-		 0 358.841552734375 64.979461669921875 0 269.90966796875 -170.62971496582031 0 -222.031494140625 -214.18772888183594
-		 0 235.43408203125 -340.00704956054688 0 304.29638671875 106.82437133789063 0 142.61550903320313 183.37701416015625
-		 0 -129.07957458496094 -238.88436889648438 0 359.3695068359375 -113.0328369140625
-		 0 36.898712158203125 57.522430419921875 0 -80.649017333984375 -339.47579956054688
-		 0 -221.17306518554688 196.40283203125 0 223.97607421875 -3.4205322265625 0 -84.1287841796875 -132.06951904296875
-		 0 -190.38291931152344 -263.40805053710938 0 309.8802490234375 86.843231201171875
-		 0 -201.99870300292969 ;
+	setAttr ".inRotPP" -type "vectorArray" 156 -48.556998090543289 149.83865402911334
+		 -15.100250244140625 -307.09045106569022 38.36028776328763 221.2947998046875 -35.909817520768357
+		 38.36028776328763 119.56649780273438 218.81502515429995 94.099472616019042 206.68353271484375 74.308983195441371
+		 70.345710372407396 30.242523193359375 459.91617433678528 230.72410036421385 -329.1146240234375 -207.14431120723117
+		 153.54504185173323 -149.66102600097656 340.58090305361748 174.43563642538547 275.98828125 552.90240122349837
+		 230.6954550665514 -73.01495361328125 -32.558845695309429 94.099472616019042 -304.77163696289063 -113.10564036859662
+		 147.38044171270781 34.55535888671875 29.380433082914323 174.43563642538547 -279.462158203125 63.998141463606643
+		 38.36028776328763 72.424957275390625 249.7824336244534 12.573689682211237 59.019317626953125 -67.331276115231304
+		 94.099472616019042 359.75146484375 -81.48971531532132 200.66141080939659 325.311767578125 152.61657810244557
+		 174.43563642538547 -284.745361328125 -23.018704239518357 38.36028776328763 -288.54266357421875 -70.490645530199998
+		 6.3748681638503104 11.825225830078125 417.42269923545996 200.66141080939659 -246.45527648925781 480.15451924344109
+		 149.83865402911334 -350.666259765625 -164.36715615031719 6.3748681638503104 156.9755859375 65.440583229398698
+		 174.43563642538547 -344.95419311523438 -268.14325679479299 70.345710372407396 -265.77813720703125 300.4031904375031
+		 94.099472616019042 22.852935791015625 430.54537798956869 176.89720582758812 -189.08505249023438 -24.570194201604437
+		 147.38044171270781 -319.09210205078125 319.5032814717531 6.3748681638503104 -74.509735107421875 166.65300733203432
+		 94.099472616019042 -114.2652587890625 -213.05841844921568 94.099472616019042 162.4176025390625 273.40796202024728
+		 38.36028776328763 344.871337890625 -139.79085661738742 153.54504185173323 116.22311401367188 3.6957512159591062
+		 131.81897318814097 150.78927612304688 96.974594948315627 6.3748681638503104 269.20257568359375 81.816856208987446
+		 94.099472616019042 302.4429931640625 324.41213547353072 97.264695456430715 -247.12332153320313 -52.148551643931285
+		 223.01158098464441 -59.090362548828125 -208.05493789353827 40.984342181853997 -127.674560546875 -58.152744250432562
+		 147.38044171270781 -238.89669799804688 124.55094532476275 147.38044171270781 -336.994873046875 -19.583785056734115
+		 174.43563642538547 35.254364013671875 225.68364698047182 94.099472616019042 169.83197021484375 -124.70668810253599
+		 94.099472616019042 -248.56759643554688 241.24560642275807 174.43563642538547 120.62521362304688 246.73925807335056
+		 200.66141080939659 20.8262939453125 -159.4789722627917 0.176055620792408 -322.135986328125 -46.058549460362656
+		 215.45784901156989 -293.62750244140625 37.869593969624475 97.264695456430715 164.87066650390625 -69.658186912202865
+		 174.43563642538547 288.44769287109375 192.64703672727853 38.36028776328763 197.15863037109375 -197.0743181074188
+		 94.099472616019042 -221.46652221679688 110.86505083722429 226.88718519340773 57.036285400390625 398.47441224919885
+		 230.83012373779067 -307.429443359375 293.05981748899728 38.36028776328763 48.4349365234375 431.7195966875031
+		 94.099472616019042 331.3349609375 -187.44702915547472 21.437923385520765 109.32696533203125 231.23687302235885
+		 97.264695456430715 -63.725189208984375 260.18140797124715 147.38044171270781 331.4151611328125 236.30612278017995
+		 174.43563642538547 -187.61309814453125 -239.32975656454951 0.176055620792408 5.5703125 58.015220466799946
+		 94.099472616019042 -4.509765625 -160.81516945598125 6.3748681638503104 -232.48727416992188 16.786941789170868
+		 200.66141080939659 -351.68826293945313 -216.23354227999641 149.83865402911334 -79.871337890625 -67.060744407153123
+		 6.3748681638503104 300.26495361328125 182.23169737950622 223.01158098464441 -140.79486083984375 -306.41863710084647
+		 38.36028776328763 -177.06733703613281 58.936180350946472 75.277179977838003 -10.871734619140625 349.80676573118478
+		 38.36028776328763 -41.54852294921875 495.98014180203484 149.83865402911334 332.4674072265625 366.09182834658623
+		 174.43563642538547 222.857177734375 217.78772276243478 38.36028776328763 7.562408447265625 72.312319930403518
+		 38.36028776328763 139.1646728515625 331.56584912890935 94.099472616019042 158.11053466796875 -52.577978925504226
+		 149.83865402911334 71.538238525390625 -6.2019843797440188 131.81897318814097 -340.37979125976563 12.491030867903518
+		 38.36028776328763 -329.7801513671875 185.42990904942809 223.01158098464441 333.831298828125 -152.72078593234016
+		 149.83865402911334 -102.31683349609375 120.87356524152116 226.88718519340773 -225.66316223144531 -113.12761576632454
+		 149.83865402911334 215.31134033203125 36.310488875716018 38.36028776328763 300.53204345703125 -118.08375697989391
+		 215.45784901156989 -164.88565063476563 381.34222715696603 38.36028776328763 -88.416412353515625 -40.945804553166937
+		 147.38044171270781 -168.88542175292969 307.67380553380309 223.01158098464441 299.09405517578125 384.87735011436621
+		 200.66141080939659 263.1353759765625 59.140453381403375 147.38044171270781 -166.99827575683594 60.300851291032039
+		 40.984342181853997 -55.646575927734375 49.431460555403518 38.36028776328763 102.72311401367188 -18.687874015621929
+		 94.099472616019042 -187.14094543457031 162.01095607139743 200.66141080939659 -141.95915222167969 -261.1248857343719
+		 94.099472616019042 -306.93203735351563 -81.573836154393263 0.176055620792408 125.47329711914063 522.39724688214619
+		 226.88718519340773 53.191680908203125 400.38089015342871 200.66141080939659 -136.4923095703125 -257.21805590038753
+		 94.099472616019042 231.08209228515625 213.80079763466924 0.176055620792408 -0.417938232421875 -137.09395616894224
+		 94.099472616019042 -227.60609436035156 154.21354526619984 215.45784901156989 -141.714111328125 379.98079705016522
+		 75.277179977838003 -40.4583740234375 486.80057637234734 149.83865402911334 -275.192138671875 16.467342419489313
+		 147.38044171270781 -137.89468383789063 -286.49815285441878 6.3748681638503104 -103.10311889648438 -162.75419993890912
+		 147.38044171270781 85.736663818359375 60.024608654840875 147.38044171270781 -85.589630126953125 191.5320138934612
+		 174.43563642538547 -5.542205810546875 -153.72700877679975 147.38044171270781 -150.541748046875 -23.464520396119724
+		 177.49357010577225 -103.24246215820313 475.76531121647639 202.41261260179596 -142.6097412109375 389.38790850323994
+		 226.88718519340773 272.86346435546875 -87.231559928707867 94.099472616019042 99.6893310546875 425.61553174609685
+		 94.099472616019042 -289.1614990234375 164.4744963105633 40.984342181853997 -60.254913330078125 -165.58805543580741
+		 38.36028776328763 195.39697265625 204.9353621204281 176.89720582758812 288.5350341796875 340.6500166093781
+		 94.099472616019042 -60.276763916015625 180.17761230596662 0.00013427875077539239
+		 193.5379638671875 -34.191429313473492 94.099472616019042 -192.83663940429688 -100.73329943066099
+		 94.099472616019042 145.64605712890625 345.6424416280031 6.3748681638503104 307.755615234375 500.73110987999121
+		 200.66141080939659 235.94171142578125 -35.607611541562228 12.573689682211237 -294.54684448242188 206.89367979368478
+		 38.36028776328763 323.83966064453125 140.08619312749713 147.38044171270781 44.171295166015625 -276.69634109178048
+		 40.984342181853997 -342.38131713867188 118.18210142454414 38.36028776328763 -258.90875244140625 344.4960859453156
+		 94.099472616019042 260.1055908203125 68.683349870225555 200.66141080939659 -347.07937622070313 -96.772332797955158
+		 188.3607732777181 -73.330535888671875 142.88620021202243 200.66141080939659 142.13656616210938 64.912873268461198
+		 174.43563642538547 -252.57241821289063 69.875923115033075 21.437923385520765 -129.80049133300781 -211.81667216280891
+		 149.83865402911334 268.00531005859375 -321.54128724733084 38.36028776328763 -358.28875732421875 278.09989552007528
+		 147.38044171270781 -24.68310546875 -131.81122606640318 94.099472616019042 -8.290374755859375 -168.20574867961406
+		 6.3748681638503104 30.595977783203125 2.561977429254938 147.38044171270781 174.29425048828125 -213.07035082226255
+		 94.099472616019042 -141.52006530761719 -49.459556754879742 94.099472616019042 358.841552734375 65.139512234278612
+		 0.176055620792408 269.90966796875 -36.647495226995062 147.38044171270781 -222.031494140625 -150.2370830887383
+		 70.345710372407396 235.43408203125 -305.13406068483084 38.36028776328763 304.29638671875 106.98442190224736
+		 0.176055620792408 142.61550903320313 183.53706472451299 0.176055620792408 -129.07957458496094 -204.01138002076834
+		 38.36028776328763 359.3695068359375 -45.131161299375634 74.691843176155572 36.898712158203125 145.94488083485885
+		 97.264695456430715 -80.649017333984375 -253.93082445507505 94.099472616019042 -221.17306518554688 393.72310445182268
+		 217.05229966262996 223.97607421875 85.001918188374475 97.264695456430715 -84.1287841796875 50.34994532920993
+		 200.66141080939659 -190.38291931152344 -195.50637492242251 74.691843176155572 309.8802490234375 220.82545093999713
+		 147.38044171270781 -201.99870300292969 ;
 	setAttr ".cacheIdPP" -type "vectorArray" 0 ;
 	setAttr ".cacheVisibilityPP" -type "vectorArray" 0 ;
 	setAttr ".initSt" -type "vectorArray" 0 ;
@@ -424,7 +430,7 @@ createNode MASH_Distribute -n "MASH1_Distribute";
 	setAttr ".bRmpX[0]"  0 1 1;
 	setAttr ".bRmpY[0]"  0 1 1;
 	setAttr ".bRmpZ[0]"  0 1 1;
-	setAttr ".ampX" 39.157894134521484;
+	setAttr ".ampX" 47.368419647216797;
 createNode MASH_Repro -n "MASH1_Repro";
 	rename -uid "9EA256F9-423B-4718-1785-4B87C9CF3914";
 	addAttr -s false -ci true -h true -sn "instancerMessage" -ln "instancerMessage" 
@@ -434,10 +440,6 @@ createNode MASH_Repro -n "MASH1_Repro";
 	setAttr ".instancedGroup[0].inMesh[0].inShGroupId[0]"  -1;
 createNode groupId -n "groupId1";
 	rename -uid "5D2910C5-4E8E-295B-9FA3-779A26AEB07B";
-createNode MASH_Dynamics -n "MASH1_Dynamics";
-	rename -uid "848B6293-47CB-1499-46E2-8DB13929ED80";
-	addAttr -s false -ci true -h true -sn "waiterMessage" -ln "waiterMessage" -at "message";
-	setAttr ".collisionObjectScale" 0.23076923191547394;
 createNode animCurveTU -n "MASH1_Transform1_positionAmount2";
 	rename -uid "A79D8D02-42AF-8204-6B75-59BF38DBDECF";
 	setAttr ".tan" 18;
@@ -550,9 +552,33 @@ createNode MASH_ChannelRandom -n "MASH_ChannelRandom2";
 	setAttr ".varianceVectorMin" -type "float3" 1 0 1 ;
 	setAttr ".varianceVectorMax" -type "float3" 10 0 10 ;
 	setAttr ".dynamicsChannelName" 10;
+createNode MASH_Python -n "MASH1_Python";
+	rename -uid "B16263D8-4224-E1EE-8F05-E4AA287B4789";
+	setAttr ".pyScript" -type "string" "import openMASH\nimport random\n \n#initialise the MASH network data\nmd = openMASH.MASHData(thisNode)\n \n#this is how to get the frame number\nframe = md.getFrame()\n#and this gets the number of objects in the network\ncount = md.count()\nrandom.seed(0)\n#add the index to the Y position\nfor i in range(count):\n    multiplier = random.randint(0,6)\n    rot = md.outRotation[i].y + 45*multiplier\n    md.outRotation[i].y=rot\n \n#tell MASH to write the network data\nmd.setData()";
+	setAttr ".enable" no;
+createNode MASH_Offset -n "MASH1_Offset";
+	rename -uid "13109A2A-46B5-7620-E7D4-9CAF76FD2A53";
+	setAttr ".mc" -type "float3" 0.66233766 0.66233766 0.66233766 ;
+	setAttr ".randEnvelope" 0.59340661764144897;
+	setAttr ".fArray" -type "vectorArray" 0 ;
+createNode animCurveTA -n "MASH1_Offset_rotateOffsetX";
+	rename -uid "1FC67D28-4076-0AA2-D936-1ABBC692F8EE";
+	setAttr ".tan" 18;
+	setAttr ".wgt" no;
+	setAttr -s 2 ".ktv[0:1]"  1 0 120 900;
+createNode animCurveTA -n "MASH1_Offset_rotateOffsetY";
+	rename -uid "185DE100-4BF2-28B7-9D9F-1282FDDEF3FC";
+	setAttr ".tan" 18;
+	setAttr ".wgt" no;
+	setAttr -s 2 ".ktv[0:1]"  1 0 120 990.00000000000011;
+createNode animCurveTA -n "MASH1_Offset_rotateOffsetZ";
+	rename -uid "4EC0F47F-4345-922A-80FF-F2B915FD11C3";
+	setAttr ".tan" 18;
+	setAttr ".wgt" no;
+	setAttr -s 2 ".ktv[0:1]"  1 0 120 0;
 select -ne :time1;
-	setAttr ".o" 1;
-	setAttr ".unw" 1;
+	setAttr ".o" 63;
+	setAttr ".unw" 63;
 select -ne :hardwareRenderingGlobals;
 	setAttr ".otfna" -type "stringArray" 22 "NURBS Curves" "NURBS Surfaces" "Polygons" "Subdiv Surface" "Particles" "Particle Instance" "Fluids" "Strokes" "Image Planes" "UI" "Lights" "Cameras" "Locators" "Joints" "IK Handles" "Deformers" "Motion Trails" "Components" "Hair Systems" "Follicles" "Misc. UI" "Ornaments"  ;
 	setAttr ".otfva" -type "Int32Array" 22 0 1 1 1 1 1
@@ -580,83 +606,17 @@ select -ne :hardwareRenderGlobals;
 	setAttr ".ctrs" 256;
 	setAttr ".btrs" 512;
 connectAttr "polyTorus1.out" "pTorusShape1.i";
-connectAttr "MASH1_Repro.out" "MASH1_ReproMeshShape.i";
-connectAttr "groupId1.id" "MASH1_ReproMeshShape.iog.og[0].gid";
 connectAttr ":initialShadingGroup.mwc" "MASH1_ReproMeshShape.iog.og[0].gco";
-connectAttr ":time1.o" "MASH1_BulletSolverShape.time";
-connectAttr "MASH1_Dynamics.enable" "MASH1_BulletSolverShape.inputNetworks[0].mashEnable"
-		;
-connectAttr "MASH1_Dynamics.bounce" "MASH1_BulletSolverShape.inputNetworks[0].mashBounce"
-		;
-connectAttr "MASH1_Dynamics.friction" "MASH1_BulletSolverShape.inputNetworks[0].mashFriction"
-		;
-connectAttr "MASH1_Dynamics.damping" "MASH1_BulletSolverShape.inputNetworks[0].mashDamping"
-		;
-connectAttr "MASH1_Dynamics.rollingFriction" "MASH1_BulletSolverShape.inputNetworks[0].mashRollingFriction"
-		;
-connectAttr "MASH1_Dynamics.rollingDamping" "MASH1_BulletSolverShape.inputNetworks[0].mashRollingDamping"
-		;
-connectAttr "MASH1_Dynamics.mass" "MASH1_BulletSolverShape.inputNetworks[0].mashMass"
-		;
-connectAttr "MASH1_Dynamics.positionStrength" "MASH1_BulletSolverShape.inputNetworks[0].mashPositionStrength"
-		;
-connectAttr "MASH1_Dynamics.rotationalStrength" "MASH1_BulletSolverShape.inputNetworks[0].mashRotationalStrength"
-		;
-connectAttr "MASH1_Dynamics.collisionObjectScale" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionObjectScale"
-		;
-connectAttr "MASH1_Dynamics.collisionShapeLength" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionShapeLength"
-		;
-connectAttr "MASH1_Dynamics.collisionShapeAxis" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionShapeAxis"
-		;
-connectAttr "MASH1_Dynamics.maxVelocity" "MASH1_BulletSolverShape.inputNetworks[0].mashMaxVelocity"
-		;
-connectAttr "MASH1_Dynamics.maxAngularVelocity" "MASH1_BulletSolverShape.inputNetworks[0].mashAngularVelocity"
-		;
-connectAttr "MASH1_Dynamics.collisionShape" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionShape"
-		;
-connectAttr "MASH1_Dynamics.initiallySleeping" "MASH1_BulletSolverShape.inputNetworks[0].mashInitiallySleeping"
-		;
-connectAttr "MASH1_Dynamics.initialVelocity" "MASH1_BulletSolverShape.inputNetworks[0].mashInitialVelocity"
-		;
-connectAttr "MASH1_Dynamics.initialRotationalVelocity" "MASH1_BulletSolverShape.inputNetworks[0].mashInitialRotationalVelocity"
-		;
-connectAttr "MASH1_Dynamics.emitFromCollisions" "MASH1_BulletSolverShape.inputNetworks[0].mashEmitFromCollisions"
-		;
-connectAttr "MASH1_Dynamics.collisionDistanceThreshold" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionDistanceThreshold"
-		;
-connectAttr "MASH1_Dynamics.ignoreInvisible" "MASH1_BulletSolverShape.inputNetworks[0].mashIgnoreInvisible"
-		;
-connectAttr "MASH1_Dynamics.autoFit" "MASH1_BulletSolverShape.inputNetworks[0].mashAutoFit"
-		;
-connectAttr "MASH1_Dynamics.linearVelocityThreshold" "MASH1_BulletSolverShape.inputNetworks[0].mashLinearVelocityThreshold"
-		;
-connectAttr "MASH1_Dynamics.angularVelocityThreshold" "MASH1_BulletSolverShape.inputNetworks[0].mashAngularVelocityThreshold"
-		;
-connectAttr "MASH1_Dynamics.collisionJitter" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionJitter"
-		;
-connectAttr "MASH1_Dynamics.contactMaskLayers" "MASH1_BulletSolverShape.inputNetworks[0].mashContactMaskLayers"
-		;
-connectAttr "MASH1_Dynamics.collisionMaskLayers" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionMaskLayers"
-		;
-connectAttr "MASH1_Dynamics.collisionGroupLayers" "MASH1_BulletSolverShape.inputNetworks[0].mashCollisionGroupLayers"
-		;
-connectAttr "MASH1_Dynamics.hierarchyMode" "MASH1_BulletSolverShape.inputNetworks[0].mashHierarchyMode"
-		;
-connectAttr "MASH1_Dynamics.initialStateJSON" "MASH1_BulletSolverShape.inputNetworks[0].mashInitialStateJSON"
-		;
-connectAttr "MASH1_Dynamics.useDensity" "MASH1_BulletSolverShape.inputNetworks[0].mashUseDensity"
-		;
-connectAttr "MASH1.outputPoints" "MASH1_BulletSolverShape.inputNetworks[0].inputPoints"
-		;
+connectAttr "groupId1.id" "MASH1_ReproMeshShape.iog.og[0].gid";
+connectAttr "MASH1_Repro.out" "MASH1_ReproMeshShape.i";
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
 connectAttr "layerManager.dli[0]" "defaultLayer.id";
 connectAttr "renderLayerManager.rlmi[0]" "defaultRenderLayer.rlid";
-connectAttr "MASH1_Random.outputPoints" "MASH1.inputPoints";
+connectAttr "MASH1_Offset.outputPoints" "MASH1.inputPoints";
 connectAttr "MASH1_Distribute.waiterMessage" "MASH1.waiterMessage";
-connectAttr "MASH1_Dynamics.waiterMessage" "MASH1.dynamicsMessage";
 connectAttr "MASH1_Distribute.outputPoints" "MASH1_Transform.inputPoints";
 connectAttr "MASH1_Replicator.outputPoints" "MASH1_Random.inputPoints";
 connectAttr "MASH1_Random_mColourR.o" "MASH1_Random.mcr";
@@ -685,23 +645,25 @@ connectAttr "MASH1_Random_minNumberY.o" "MASH1_Random.minY";
 connectAttr "MASH1_Random_maxNumberZ.o" "MASH1_Random.maxZ";
 connectAttr "MASH1_Random_minNumberZ.o" "MASH1_Random.minZ";
 connectAttr ":time1.o" "MASH1_Replicator.ti";
-connectAttr "MASH1_Dynamics.outputPoints" "MASH1_Replicator.inputPoints";
+connectAttr "MASH1_Transform.outputPoints" "MASH1_Replicator.inputPoints";
 connectAttr "MASH1_ReproMeshShape.wim" "MASH1_Repro.mmtx";
 connectAttr "MASH1_ReproMeshShape.msg" "MASH1_Repro.meshmessage";
-connectAttr "MASH1_BulletSolverShape.outputPoints[0]" "MASH1_Repro.inputPoints";
+connectAttr "MASH1.outputPoints" "MASH1_Repro.inputPoints";
 connectAttr "pTorus1.msg" "MASH1_Repro.instancedGroup[0].gmsg";
 connectAttr "pTorus1.wm" "MASH1_Repro.instancedGroup[0].gmtx";
 connectAttr "pTorusShape1.o" "MASH1_Repro.instancedGroup[0].inMesh[0].mesh";
 connectAttr "pTorusShape1.wm" "MASH1_Repro.instancedGroup[0].inMesh[0].matrix";
 connectAttr "groupId1.id" "MASH1_Repro.instancedGroup[0].inMesh[0].groupId[0]";
 connectAttr "MASH1.instancerMessage" "MASH1_Repro.instancerMessage";
-connectAttr "MASH1_BulletSolverShape.instancerMessage" "MASH1_Repro.dynamicsMessage"
-		;
-connectAttr ":time1.o" "MASH1_Dynamics.time";
-connectAttr "MASH1_Transform.outputPoints" "MASH1_Dynamics.inputPoints";
-connectAttr "MASH_ChannelRandom2.outputPoints" "MASH1_Dynamics.dynamicsPP[0]";
 connectAttr "MASH1_Distribute.outputPoints" "MASH_ChannelRandom1.inputPoints";
 connectAttr "MASH1_Transform.outputPoints" "MASH_ChannelRandom2.inputPoints";
+connectAttr ":time1.o" "MASH1_Python.tm";
+connectAttr "MASH1_Random.outputPoints" "MASH1_Python.inputPoints";
+connectAttr ":time1.o" "MASH1_Offset.ti";
+connectAttr "MASH1_Python.outputPoints" "MASH1_Offset.inputPoints";
+connectAttr "MASH1_Offset_rotateOffsetX.o" "MASH1_Offset.rotateOffsetX";
+connectAttr "MASH1_Offset_rotateOffsetY.o" "MASH1_Offset.rotateOffsetY";
+connectAttr "MASH1_Offset_rotateOffsetZ.o" "MASH1_Offset.rotateOffsetZ";
 connectAttr "defaultRenderLayer.msg" ":defaultRenderingList1.r" -na;
 connectAttr "pTorusShape1.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "MASH1_ReproMeshShape.iog.og[0]" ":initialShadingGroup.dsm" -na;
