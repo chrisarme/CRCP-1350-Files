@@ -1,6 +1,6 @@
 //Maya ASCII 2018 scene
 //Name: Project 5 - Scene 6.ma
-//Last modified: Fri, May 04, 2018 01:29:27 AM
+//Last modified: Fri, May 04, 2018 11:20:37 AM
 //Codeset: 1252
 requires maya "2018";
 requires -nodeType "aiOptions" -nodeType "aiAOVDriver" -nodeType "aiAOVFilter" -nodeType "aiSkyDomeLight"
@@ -146,7 +146,7 @@ createNode nCloth -n "nClothShape1" -p "nCloth1";
 	setAttr -k off ".mxc";
 	setAttr -k off ".lod";
 	setAttr -k off ".inh";
-	setAttr ".cts" 1;
+	setAttr ".cts" 180;
 	setAttr -k off ".stf";
 	setAttr -k off ".igs";
 	setAttr -k off ".ecfh";
@@ -193,8 +193,6 @@ createNode dynamicConstraint -n "dynamicConstraintShape2" -p "dynamicConstraint2
 	setAttr ".mds" 0.01;
 createNode transform -n "pPlatonic1";
 	rename -uid "128929CB-4D70-5B9B-2751-8AAE61CA81A0";
-	setAttr ".t" -type "double3" -16.841 8.4629664522868904 0 ;
-	setAttr -av ".tx";
 createNode mesh -n "pPlatonicShape1" -p "pPlatonic1";
 	rename -uid "A22AD0A5-48F6-0064-9A0C-1EB45F095BA0";
 	setAttr -k off ".v";
@@ -238,7 +236,7 @@ createNode nRigid -n "nRigidShape1" -p "nRigid1";
 	setAttr -k off ".mxc";
 	setAttr -k off ".lod";
 	setAttr -k off ".inh";
-	setAttr ".cts" 1;
+	setAttr ".cts" 180;
 	setAttr -k off ".stf";
 	setAttr -k off ".igs";
 	setAttr -k off ".ecfh";
@@ -399,7 +397,8 @@ createNode aiAOVFilter -s -n "defaultArnoldFilter";
 	setAttr ".ai_translator" -type "string" "gaussian";
 createNode aiAOVDriver -s -n "defaultArnoldDriver";
 	rename -uid "4195DF44-4963-C8F5-6076-AD841713267B";
-	setAttr ".ai_translator" -type "string" "exr";
+	setAttr ".color_management" 1;
+	setAttr ".ai_translator" -type "string" "png";
 createNode aiAOVDriver -s -n "defaultArnoldDisplayDriver";
 	rename -uid "BF5C21B2-49AB-F02B-6445-79930C77F0CB";
 	setAttr ".output_mode" 0;
@@ -493,8 +492,8 @@ createNode polyPlane -n "polyPlane1";
 	rename -uid "5120CD80-4F36-DB8A-7788-039ECFEBDEEB";
 	setAttr ".cuv" 2;
 select -ne :time1;
-	setAttr ".o" 1;
-	setAttr ".unw" 1;
+	setAttr ".o" 180;
+	setAttr ".unw" 180;
 select -ne :hardwareRenderingGlobals;
 	setAttr ".otfna" -type "stringArray" 22 "NURBS Curves" "NURBS Surfaces" "Polygons" "Subdiv Surface" "Particles" "Particle Instance" "Fluids" "Strokes" "Image Planes" "UI" "Lights" "Cameras" "Locators" "Joints" "IK Handles" "Deformers" "Motion Trails" "Components" "Hair Systems" "Follicles" "Misc. UI" "Ornaments"  ;
 	setAttr ".otfva" -type "Int32Array" 22 0 1 1 1 1 1
@@ -518,8 +517,17 @@ select -ne :initialParticleSE;
 	setAttr ".ro" yes;
 select -ne :defaultRenderGlobals;
 	setAttr ".ren" -type "string" "arnold";
+	setAttr ".outf" 51;
+	setAttr ".imfkey" -type "string" "png";
+	setAttr ".an" yes;
+	setAttr ".ef" 180;
+	setAttr ".sef" yes;
+	setAttr ".pff" yes;
 select -ne :defaultResolution;
+	setAttr ".w" 1920;
+	setAttr ".h" 1080;
 	setAttr ".pa" 1;
+	setAttr ".dar" 1.7769999504089355;
 select -ne :defaultLightSet;
 	setAttr -s 2 ".dsm";
 select -ne :hardwareRenderGlobals;
